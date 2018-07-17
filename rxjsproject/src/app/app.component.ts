@@ -15,11 +15,6 @@ export class AppComponent implements OnInit {
       console.log('click: ', evt);
     });
 
-    //stream indefinido
-    document.getElementById('nameInput').addEventListener('keypress', evt => {
-      console.log('keypress: ',  evt);
-    });
-
     // stream indefinido
     setInterval(() => {
       this.seconds++;
