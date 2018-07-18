@@ -9,6 +9,10 @@ import { map } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
 
+  // 1. Add lists where save the filer pokemons
+  levelOne: Pokemon[];
+  levelTwo: Pokemon[];
+
   seconds = 0;
 
   ngOnInit() {
@@ -38,7 +42,10 @@ export class AppComponent implements OnInit {
       );
 
     pokemons$.subscribe(
-      pokemons => console.log(pokemons),
+      pokemons => {
+        this.levelOne = pokemons.filter(pokemon => pokemon.nivel == 1);
+        this.levelTwo = pokemons.filter(pokemon => pokemon.nivel == 2);
+      },
       noop,
       () => console.log('stream completed')
     );
