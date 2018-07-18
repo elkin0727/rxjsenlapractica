@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
       () => console.log('completed') // the stream has completed
     );
 
+    
     const http$ = this.createHttpObservable('Api/pokemons');
 
     const pokemons$ = http$
