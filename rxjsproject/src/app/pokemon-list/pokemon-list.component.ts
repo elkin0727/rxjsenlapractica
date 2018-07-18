@@ -6,11 +6,11 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./pokemon-list.component.css']
 })
 export class PokemonListComponent implements OnInit {
-  @Input() pokemons: any[];
+  @Input() pokemons: Pokemon[];
   constructor() { }
 
   ngOnInit() {
-    
+
   }
 
 }
