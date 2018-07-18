@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { concat, fromEvent, interval, timer, Subscription, noop, Observable, of } from 'rxjs';
 
-import { map, filter, shareReplay, tap } from 'rxjs/operators';
+import { map, filter, shareReplay, tap, delay, zip } from 'rxjs/operators';
 
 
 @Component({
@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
     const obs1$:Observable<string> = of('a','b','c');
     const obs2$:Observable<string> = of('d','e','f');
     const obs3$:Observable<string> = of('g','h','i');
-    const result$ = concat(obs1$, obs2$, obs3$);
+    const result$ = concat(obs1$, obs2$, obs3$).pipe(zip(interval$));
     result$.subscribe(console.log);
   }
 
