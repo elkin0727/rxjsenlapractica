@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { fromEvent, interval, timer, Subscription, noop, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +10,8 @@ import { map } from 'rxjs/operators';
 export class AppComponent implements OnInit {
 
   // 1. Add lists where save the filer pokemons
-  levelOne: Pokemon[];
-  levelTwo: Pokemon[];
+  levelOne$: Observable<Pokemon[]>;
+  levelTwo$: Observable<Pokemon[]>;
 
   seconds = 0;
 
@@ -33,22 +33,26 @@ export class AppComponent implements OnInit {
       () => console.log('completed') // the stream has completed
     );
 
-    
-    const http$ = this.createHttpObservable('Api/pokemons');
+    //EXAMPLE TWO
+
+    const http$: Observable<Pokemon[]> = this.createHttpObservable('Api/pokemons');
 
     const pokemons$ = http$
       .pipe(
         map(res => res["payload"])
       );
 
-    pokemons$.subscribe(
-      pokemons => {
-        this.levelOne = pokemons.filter(pokemon => pokemon.nivel == 1);
-        this.levelTwo = pokemons.filter(pokemon => pokemon.nivel == 2);
-      },
-      noop,
-      () => console.log('stream completed')
-    );
+    this.levelOne$ = pokemons$
+      .pipe(
+        map(pokemons => pokemons
+          .filter(pokemon => pokemon.nivel === 1))
+      );
+
+    this.levelTwo$ = pokemons$
+      .pipe(
+        map(pokemons => pokemons
+          .filter(pokemon => pokemon.nivel === 2))
+      );
   }
 
   createHttpObservable(url: string) {

@@ -3,7 +3,7 @@
 <button id="saveButton" class="btn">Save</button>
 
 <h3>Nivel 1</h3>
-<app-pokemon-list [pokemons]="levelOne"></app-pokemon-list>    
+<app-pokemon-list [pokemons]="levelOne$ | async"></app-pokemon-list>    
 
 <h3>Nivel 2</h3>
-<app-pokemon-list [pokemons]="levelTwo"></app-pokemon-list>    
+<app-pokemon-list [pokemons]="levelTwo$ | async"></app-pokemon-list>    
