@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { fromEvent, interval, timer, Subscription, noop, Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { map, filter, shareReplay, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -39,7 +39,9 @@ export class AppComponent implements OnInit {
 
     const pokemons$ = http$
       .pipe(
-        map(res => res["payload"])
+        tap(() => console.log("HTTP Executed")),
+        map(res => res["payload"]),
+        shareReplay()
       );
 
     this.levelOne$ = pokemons$
