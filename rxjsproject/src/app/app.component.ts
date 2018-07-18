@@ -60,9 +60,9 @@ export class AppComponent implements OnInit {
 
 
     //EXAMPLE THREE
-    const obs1$:Observable<number> = of(1,2,3);
-    const obs2$:Observable<number> = of(4,5,6);
-    const obs3$:Observable<number> = of(7,8,9);
+    const obs1$:Observable<string> = of('a','b','c');
+    const obs2$:Observable<string> = of('d','e','f');
+    const obs3$:Observable<string> = of('g','h','i');
     const result$ = concat(obs1$, obs2$, obs3$);
     result$.subscribe(console.log);
   }
