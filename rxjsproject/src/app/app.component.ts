@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { concat, fromEvent, interval, timer, Subscription, noop, Observable, of, from } from 'rxjs';
-import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startWith } from 'rxjs/operators';
+import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startWith, share } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
     //     }, 1000);
     //   }, 3000);
     // });
+    //Fuente de pokemones
 
     const click$ = fromEvent(document.getElementById('startButton'), 'click');
     click$.subscribe(() => {
@@ -32,10 +33,11 @@ export class AppComponent implements OnInit {
     });
 
     let moment = 0, name = 'pikachu';
-    
+
     const httpPUTMap$ = this.createHTTPPUTObservable(moment, name)
       .pipe(
-        map(response => response['payload'])
+        map(response => response['payload']),
+        shareReplay()
       );
 
     this.levelOne$ =
