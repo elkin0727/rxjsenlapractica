@@ -9,6 +9,9 @@ import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startW
 })
 export class AppComponent implements OnInit {
 
+  pokemons: Pokemon[];
+
+
   ngOnInit() {
     // document.getElementById('startButton').addEventListener('click', (event) => {
     //   console.log(event);
@@ -28,8 +31,17 @@ export class AppComponent implements OnInit {
     });
 
     let moment = 0, name = 'pikachu';
+    this.createHTTPPUTObservable(moment, name)
+      .pipe(
+        map(response => response['payload']) 
+      ).subscribe((responseWithMap) => {
+        this.pokemons = responseWithMap;
+      });
+  
+  }
 
-    const $httpPUT = Observable.create(observer => {
+  createHTTPPUTObservable (moment, name){
+    return Observable.create(observer => {
       fetch(`api/pokemon/${moment}/${name}`, {
         method: 'PUT'
       }).then(response => {
@@ -41,8 +53,5 @@ export class AppComponent implements OnInit {
         observer.error(error);
       });
     });
-
-    $httpPUT.subscribe();
-
   }
 }

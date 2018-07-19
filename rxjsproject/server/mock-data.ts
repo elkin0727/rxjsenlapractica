@@ -7,11 +7,11 @@ export const dataBaseMock = {
                 nivel: 1
             },
             {
-                name: 'Chalmander',
+                name: 'Charmander',
                 nivel: 1
             },
             {
-                name: 'Riachu',
+                name: 'Raichu',
                 nivel: 2
             },
             {
