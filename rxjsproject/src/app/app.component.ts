@@ -28,18 +28,14 @@ export class AppComponent implements OnInit {
     const group1Pokemons$ = from(["Aerodactyl", "Beedrill", "Caterpie"]);
     const group2Pokemons$ = from(["Dragonite", "Ekans", "Flareon"]);
     const group3Pokemons$ = from(["Golbat", "Hitmonchan", "Ivysaur"]);
-
-    const allGroups$ = concat(group1Pokemons$, group2Pokemons$, group3Pokemons$);
-    allGroups$.subscribe(console.log);
-
-    const click$ = fromEvent(document.getElementById('startButton'), 'click');
-    click$.subscribe(() => {
-      const interval$ = timer(3000, 1000).pipe(tap(console.log));
-      interval$.subscribe();
-    });
-
+    const interval$ = timer(3000, 1000);
+    
+    const allGroups$ = concat(group1Pokemons$, group2Pokemons$, group3Pokemons$).pipe(
+      zip(interval$));
+      allGroups$.subscribe(console.log);
+    
+      
     let moment = 0, name = 'pikachu';
-
     const httpPUTMap$ = this.createHTTPPUTObservable(moment, name)
       .pipe(
         map(response => response['payload']),
