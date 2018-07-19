@@ -12,9 +12,7 @@ mockyeah.put(
             if (false) {
                 res.status(500).send('Error');
             } else {
-                res.send(
-                    {}
-                );
+                res.send(dataBaseMock.pokemons);
             }
         }, 2000);
     });
