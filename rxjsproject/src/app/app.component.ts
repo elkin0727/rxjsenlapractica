@@ -25,6 +25,12 @@ export class AppComponent implements OnInit {
     //   }, 3000);
     // });
     //Fuente de pokemones
+    const group1Pokemons$ = from(["Aerodactyl", "Beedrill", "Caterpie"]);
+    const group2Pokemons$ = from(["Dragonite", "Ekans", "Flareon"]);
+    const group3Pokemons$ = from(["Golbat", "Hitmonchan", "Ivysaur"]);
+
+    const allGroups$ = concat(group1Pokemons$, group2Pokemons$, group3Pokemons$);
+    allGroups$.subscribe(console.log);
 
     const click$ = fromEvent(document.getElementById('startButton'), 'click');
     click$.subscribe(() => {
