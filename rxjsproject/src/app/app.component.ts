@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { concat, fromEvent, interval, timer, Subscription, noop, Observable, of } from 'rxjs';
+import { concat, fromEvent, interval, timer, Subscription, noop, Observable, of, from } from 'rxjs';
 
 import { map, filter, shareReplay, tap, delay, zip } from 'rxjs/operators';
 
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
 
     //EXAMPLE TWO
 
-    const http$: Observable<Pokemon[]> = this.createHttpObservable('Api/pokemons');
+    const http$: Observable<Pokemon[]> = this.createHttpObservable('api/pokemons');
 
     const pokemons$ = http$
       .pipe(
@@ -63,8 +63,16 @@ export class AppComponent implements OnInit {
     const obs1$:Observable<string> = of('a','b','c');
     const obs2$:Observable<string> = of('d','e','f');
     const obs3$:Observable<string> = of('g','h','i');
-    const result$ = concat(obs1$, obs2$, obs3$).pipe(zip(interval$));
-    result$.subscribe(console.log);
+    
+    const result$ = concat(obs1$, obs2$, obs3$).pipe(
+      zip(interval$),
+      filter((pokemon: string, second: number) => second % 2 !== 0)
+    );
+
+    result$.subscribe((values) => {
+      this.createHTTPPutObservable.apply(this, values);
+      //this.createHttpObservable(values);
+    });
   }
 
   createHttpObservable(url: string) {
@@ -79,5 +87,17 @@ export class AppComponent implements OnInit {
           observer.error(err);
         });
     });
+  }
+
+  createHTTPPutObservable(pokemonName: string, moment: number){
+    const sendData$ = from(fetch(`/api/Pokemon/${moment}/${pokemonName}`, {
+      method: 'PUT',
+      body: JSON.stringify({moment, pokemonName}),
+      headers: {
+        'content-type': 'application/json'
+      }
+    }));
+
+    sendData$.subscribe();
   }
 }

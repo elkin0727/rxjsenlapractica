@@ -25,10 +25,18 @@ export const dataBaseMock = {
 
 export const mockServices = {
     pokemons: {
-        pattern: '/Api/pokemons',
+        pattern: '/api/pokemons',
         ok: dataBaseMock.pokemons,
         ko: {
-            status: 500,
+            status: 200,
+            json: { errorCode: 'UnexpectedException' }
+        }
+    },
+    pokemon: {
+        pattern: '/api/pokemon/:number/:pokemonname',
+        ok: {},
+        ko: {
+            status: 200,
             json: { errorCode: 'UnexpectedException' }
         }
     }
