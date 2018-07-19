@@ -27,10 +27,22 @@ export class AppComponent implements OnInit {
       interval$.subscribe();
     });
 
-    // let moment = 0, name = 'pikachu';
-    // Observable.cre
-    // fetch(`api/pokemon/${moment}/${name}`, {
-    //   method: 'PUT'
-    // });
+    let moment = 0, name = 'pikachu';
+
+    const $httpPUT = Observable.create(observer => {
+      fetch(`api/pokemon/${moment}/${name}`, {
+        method: 'PUT'
+      }).then(response => {
+        return response.json();
+      }).then(body => {
+        observer.next(body);
+        observer.complete();
+      }).catch(error => {
+        observer.error(error);
+      });
+    });
+
+    $httpPUT.subscribe();
+
   }
 }
