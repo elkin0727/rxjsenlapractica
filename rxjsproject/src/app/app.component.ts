@@ -10,17 +10,31 @@ import { map, filter, shareReplay, tap, delay, zip, concatMap } from 'rxjs/opera
 export class AppComponent implements OnInit {
 
   ngOnInit() {
+    // document.getElementById('startButton').addEventListener('click', (event) => {
+    //   console.log(event);
+    //   setTimeout(() => {
+    //     console.log('Completed');
+    //     let seconds = 0;
+    //     setInterval(() => {
+    //       console.log(seconds++);
+    //     }, 1000);
+    //   }, 3000);
+    // });
+
     document.getElementById('startButton').addEventListener('click', (event) => {
-      console.log(event);
+      const interval$ = timer(5000, 1000);
+      interval$.subscribe(console.log);
     });
 
-    let seconds = 0;
-    setInterval(() => {
-      console.log(seconds++);
-    }, 1000);
 
-    setTimeout(() => console.log('Completed'), 4000);
+    // setTimeout(() => {
+    //   interval$.subscribe((value) => console.log(value * 1000));
+    // }, 3000)
 
 
-  }  
+
+
+
+
+  }
 }
