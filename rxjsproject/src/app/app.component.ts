@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { concat, fromEvent, interval, timer, Subscription, noop, Observable, of, from } from 'rxjs';
-import { map, filter, shareReplay, tap, delay, zip, concatMap } from 'rxjs/operators';
+import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -21,20 +21,16 @@ export class AppComponent implements OnInit {
     //   }, 3000);
     // });
 
-    document.getElementById('startButton').addEventListener('click', (event) => {
-      const interval$ = timer(5000, 1000);
-      interval$.subscribe(console.log);
+    const click$ = fromEvent(document.getElementById('startButton'), 'click');
+    click$.subscribe(() => {
+      const interval$ = timer(3000, 1000).pipe(tap(console.log));
+      interval$.subscribe();
     });
 
-
-    // setTimeout(() => {
-    //   interval$.subscribe((value) => console.log(value * 1000));
-    // }, 3000)
-
-
-
-
-
-
+    // let moment = 0, name = 'pikachu';
+    // Observable.cre
+    // fetch(`api/pokemon/${moment}/${name}`, {
+    //   method: 'PUT'
+    // });
   }
 }
