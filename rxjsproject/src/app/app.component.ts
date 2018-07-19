@@ -9,7 +9,8 @@ import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startW
 })
 export class AppComponent implements OnInit {
 
-  pokemons: Pokemon[];
+  levelOne$: Observable<Pokemon[]>;
+  levelTwo$: Observable<Pokemon[]>;
 
 
   ngOnInit() {
@@ -31,16 +32,29 @@ export class AppComponent implements OnInit {
     });
 
     let moment = 0, name = 'pikachu';
-    this.createHTTPPUTObservable(moment, name)
+    
+    const httpPUTMap$ = this.createHTTPPUTObservable(moment, name)
       .pipe(
-        map(response => response['payload']) 
-      ).subscribe((responseWithMap) => {
-        this.pokemons = responseWithMap;
-      });
-  
+        map(response => response['payload'])
+      );
+
+    this.levelOne$ =
+      httpPUTMap$
+        .pipe(
+          map((response: Pokemon[]) => response.
+            filter((pokemon: Pokemon) => pokemon.nivel === 1))
+        )
+
+    this.levelTwo$ =
+      httpPUTMap$
+        .pipe(
+          map((response: Pokemon[]) => response.
+            filter((pokemon: Pokemon) => pokemon.nivel === 2))
+        )
+
   }
 
-  createHTTPPUTObservable (moment, name){
+  createHTTPPUTObservable(moment, name) {
     return Observable.create(observer => {
       fetch(`api/pokemon/${moment}/${name}`, {
         method: 'PUT'

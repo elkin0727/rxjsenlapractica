@@ -1,6 +1,9 @@
 
 <button id="startButton" class="btn">Start</button>
-<app-pokemon-list [pokemons]="pokemons"></app-pokemon-list>    
+<h3>Level One</h3>
+<app-pokemon-list [pokemons]="levelOne$ | async"></app-pokemon-list>    
+<h3>Level Two</h3>
+<app-pokemon-list [pokemons]="levelTwo$ | async"></app-pokemon-list>    
 
 
 
