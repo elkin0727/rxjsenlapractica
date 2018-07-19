@@ -57,13 +57,11 @@ export class AppComponent implements OnInit {
     const allGroups$ = concat(group1Pokemons$, group2Pokemons$, group3Pokemons$).
     pipe(
       zip(interval$),
+      concatMap(this.createHTTPPUTObservable),
+      tap(console.log)
     );
     
-    allGroups$.subscribe((values) => {
-      console.log(values);
-      this.createHTTPPUTObservable(values[0], values[1]).subscribe()
-    });
-
+    allGroups$.subscribe();
 
   }
 
