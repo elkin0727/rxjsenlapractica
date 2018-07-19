@@ -24,22 +24,14 @@ export class AppComponent implements OnInit {
     //     }, 1000);
     //   }, 3000);
     // });
-    //Fuente de pokemones
-    const group1Pokemons$ = from(["Aerodactyl", "Beedrill", "Caterpie"]);
-    const group2Pokemons$ = from(["Dragonite", "Ekans", "Flareon"]);
-    const group3Pokemons$ = from(["Golbat", "Hitmonchan", "Ivysaur"]);
-    const interval$ = timer(3000, 1000);
     
-    const allGroups$ = concat(group1Pokemons$, group2Pokemons$, group3Pokemons$).pipe(
-      zip(interval$));
-      allGroups$.subscribe(console.log);
     
-      
+    
+
     let moment = 0, name = 'pikachu';
     const httpPUTMap$ = this.createHTTPPUTObservable(moment, name)
       .pipe(
-        map(response => response['payload']),
-        shareReplay()
+        map(response => response['payload'])
       );
 
     this.levelOne$ =
@@ -56,9 +48,26 @@ export class AppComponent implements OnInit {
             filter((pokemon: Pokemon) => pokemon.nivel === 2))
         )
 
+    //Fuente de pokemones
+    const group1Pokemons$ = from(["Aerodactyl", "Beedrill", "Caterpie"]);
+    const group2Pokemons$ = from(["Dragonite", "Ekans", "Flareon"]);
+    const group3Pokemons$ = from(["Golbat", "Hitmonchan", "Ivysaur"]);
+    const interval$ = timer(3000, 1000);
+    
+    const allGroups$ = concat(group1Pokemons$, group2Pokemons$, group3Pokemons$).
+    pipe(
+      zip(interval$),
+    );
+    
+    allGroups$.subscribe((values) => {
+      console.log(values);
+      this.createHTTPPUTObservable(values[0], values[1]).subscribe()
+    });
+
+
   }
 
-  createHTTPPUTObservable(moment, name) {
+  createHTTPPUTObservable(name, moment) {
     return Observable.create(observer => {
       fetch(`api/pokemon/${moment}/${name}`, {
         method: 'PUT'
