@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { concat, fromEvent, interval, timer, Subscription, noop, Observable, of, from } from 'rxjs';
 
-import { map, filter, shareReplay, tap, delay, zip } from 'rxjs/operators';
+import { map, filter, shareReplay, tap, delay, zip, concatMap } from 'rxjs/operators';
 
 
 @Component({
@@ -64,15 +64,17 @@ export class AppComponent implements OnInit {
     const obs2$:Observable<string> = of('d','e','f');
     const obs3$:Observable<string> = of('g','h','i');
     
+    var self = this;
     const result$ = concat(obs1$, obs2$, obs3$).pipe(
       zip(interval$),
-      filter((pokemon: string, second: number) => second % 2 !== 0)
+      tap(console.log),
+      concatMap((values) => {console.log('test', values);return self.createHTTPPutObservable.apply(self, values);})
+      //,
+      //filter((pokemon: string, second: number) => second % 2 !== 0)
+
     );
 
-    result$.subscribe((values) => {
-      this.createHTTPPutObservable.apply(this, values);
-      //this.createHttpObservable(values);
-    });
+    result$.subscribe();
   }
 
   createHttpObservable(url: string) {
@@ -97,7 +99,6 @@ export class AppComponent implements OnInit {
         'content-type': 'application/json'
       }
     }));
-
-    sendData$.subscribe();
+    return sendData$;
   }
 }
