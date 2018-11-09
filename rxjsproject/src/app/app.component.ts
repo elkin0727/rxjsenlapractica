@@ -1,82 +1,83 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { concat, fromEvent, interval, timer, Subscription, noop, Observable, of, from } from 'rxjs';
-import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startWith, share } from 'rxjs/operators';
+import { map, filter, shareReplay, tap, delay, zip, concatMap, exhaustMap, takeUntil, startWith, share } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-
-  levelOne$: Observable<Pokemon[]>;
-  levelTwo$: Observable<Pokemon[]>;
-
-
+export class AppComponent {
+  pokemonsNivel1$: Observable<Pokemon[]>;
+  pokemonsNivel2$: Observable<Pokemon[]>;
   ngOnInit() {
-    // document.getElementById('startButton').addEventListener('click', (event) => {
-    //   console.log(event);
-    //   setTimeout(() => {
-    //     console.log('Completed');
-    //     let seconds = 0;
-    //     setInterval(() => {
-    //       console.log(seconds++);
-    //     }, 1000);
-    //   }, 3000);
-    // });
-    
-    
-    
 
-    let moment = 0, name = 'pikachu';
-    const httpPUTMap$ = this.createHTTPPUTObservable(moment, name)
+    const http$ = this.createObservableHTTPGet('api/pokemons');
+    const pokemons$: Observable<Pokemon[]> = http$
       .pipe(
-        map(response => response['payload'])
+        map(responseHttp => responseHttp['payload']),
+        share()
+      );
+    
+    this.pokemonsNivel1$ = pokemons$
+      .pipe(
+        map((pokemons) => pokemons.filter(pokemon => pokemon.nivel === 1))
       );
 
-    this.levelOne$ =
-      httpPUTMap$
-        .pipe(
-          map((response: Pokemon[]) => response.
-            filter((pokemon: Pokemon) => pokemon.nivel === 1))
-        )
+    this.pokemonsNivel2$ = pokemons$
+      .pipe(
+        map((pokemons) => pokemons.filter(pokemon => pokemon.nivel === 2))
+      );
 
-    this.levelTwo$ =
-      httpPUTMap$
-        .pipe(
-          map((response: Pokemon[]) => response.
-            filter((pokemon: Pokemon) => pokemon.nivel === 2))
-        )
-
-    //Fuente de pokemones
     const group1Pokemons$ = from(["Aerodactyl", "Beedrill", "Caterpie"]);
     const group2Pokemons$ = from(["Dragonite", "Ekans", "Flareon"]);
     const group3Pokemons$ = from(["Golbat", "Hitmonchan", "Ivysaur"]);
-    const interval$ = timer(3000, 1000);
-    
-    const allGroups$ = concat(group1Pokemons$, group2Pokemons$, group3Pokemons$).
-    pipe(
-      zip(interval$),
-      concatMap(this.createHTTPPUTObservable),
-      tap(console.log)
-    );
-    
-    allGroups$.subscribe();
 
+    const interval$ = interval(1000);
+    const evenPokemons$ = concat(group1Pokemons$, group2Pokemons$, group3Pokemons$).
+      pipe(
+        zip(interval$),
+        exhaustMap((pokemonAndCounter) => this.createObservableHTTPPost.apply(this, pokemonAndCounter))
+        //,
+        //filter((pokemon: Pokemon, counter: number) => counter % 2 === 0)
+      );
+
+    ;
+    evenPokemons$.subscribe(responseHttpByPokemon => {
+      console.log(responseHttpByPokemon);
+    });
   }
 
-  createHTTPPUTObservable(name, moment) {
+  /**
+   * Utilitarios
+   */
+
+  createObservableHTTPGet(url: string) {
     return Observable.create(observer => {
-      fetch(`api/pokemon/${moment}/${name}`, {
-        method: 'PUT'
-      }).then(response => {
-        return response.json();
-      }).then(body => {
-        observer.next(body);
-        observer.complete();
-      }).catch(error => {
-        observer.error(error);
-      });
+      fetch(url)
+        .then(response => {
+          if (response.status === 500 || response.status === 504) {
+            observer.error('500 || 504 error');
+          }
+          else {
+            return response.json();
+          }
+
+        })
+        .then(body => {
+          observer.next(body);
+          observer.complete();
+        })
+        .catch(err => {
+          observer.error(err);
+        });
     });
+  }
+
+  createObservableHTTPPost(pokemonName: string, counter: number) {
+    return from(fetch(`api/pokemon/${counter}/${pokemonName}`, {
+      method: 'POST',
+      body: JSON.stringify({counter, pokemonName})
+    }));
   }
 }
