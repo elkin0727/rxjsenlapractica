@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { concat, fromEvent, interval, timer, Subscription, noop, Observable, of, from } from 'rxjs';
-import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startWith, share } from 'rxjs/operators';
+import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startWith, share, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
     const allGroups$ = concat(group1Pokemons$, group2Pokemons$, group3Pokemons$).
     pipe(
       zip(interval$),
-      concatMap(this.createHTTPPUTObservable),
+      mergeMap(this.createHTTPPUTObservable),
       tap(console.log)
     );
     
