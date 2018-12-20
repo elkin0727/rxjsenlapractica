@@ -61,7 +61,10 @@ export class AppComponent implements OnInit {
       tap(console.log)
     );
     
-    allGroups$.subscribe();
+    // allGroups$.subscribe(); 
+    // Another example
+
+
 
   }
 
@@ -78,5 +81,24 @@ export class AppComponent implements OnInit {
         observer.error(error);
       });
     });
+  }
+
+  createHTTPPostObservable(namePokemon: string){
+      return Observable.create(observer => {
+          fetch(`api/pokemon`, {
+              method: 'POST',
+              body: JSON.stringify({name: namePokemon}),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+          }).then(response => response.json())
+          .then(body => {
+              observer.next();
+              observer.complete();
+          })
+          .catch(error => {
+              observer.error(error);
+          })
+      });
   }
 }
