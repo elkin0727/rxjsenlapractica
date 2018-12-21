@@ -21,6 +21,6 @@ mockyeah.post(
     mockServices.newpokemon.pattern, function(req, res, next) {
         setTimeout(() => {
            res.status(200).send(); 
-        }, 100);
+        }, 1000);
     }
 )

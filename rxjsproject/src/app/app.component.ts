@@ -63,6 +63,14 @@ export class AppComponent implements OnInit {
     
     // allGroups$.subscribe(); 
     // Another example
+    const inputSearchPokemon$ = fromEvent(document.getElementById('inpSearchPokemon'), 'keyup');
+    
+    inputSearchPokemon$.pipe(
+        tap(console.log)
+    ).subscribe((event: KeyboardEvent) => {
+        const value = (<HTMLInputElement>event.target).value;
+        this.createHTTPPostObservable(value).subscribe();
+    });
 
 
 
@@ -91,9 +99,9 @@ export class AppComponent implements OnInit {
               headers: {
                 'Content-Type': 'application/json'
               }
-          }).then(response => response.json())
+          }).then(response => {return response.body;})
           .then(body => {
-              observer.next();
+              observer.next(body);
               observer.complete();
           })
           .catch(error => {

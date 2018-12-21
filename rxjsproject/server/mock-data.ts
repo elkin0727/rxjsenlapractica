@@ -42,10 +42,10 @@ export const mockServices = {
     },
     newpokemon: {
         pattern: '/api/pokemon/',
-        ok: {},
+        ok: { 'property': 'another value'},
         ko: {
             status: 200,
-            json: { errorCode: 'UnexpectedException' }
+            json: { test: 'ok' }
         }
     }
 };
