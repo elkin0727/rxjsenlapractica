@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { concat, fromEvent, interval, timer, Subscription, noop, Observable, of, from } from 'rxjs';
-import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startWith, share, mergeMap } from 'rxjs/operators';
+import { map, filter, shareReplay, tap, delay, zip, concatMap, takeUntil, startWith, share, mergeMap, exhaustMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -66,14 +66,10 @@ export class AppComponent implements OnInit {
     const inputSearchPokemon$ = fromEvent(document.getElementById('inpSearchPokemon'), 'keyup');
     
     inputSearchPokemon$.pipe(
-        tap(console.log)
-    ).subscribe((event: KeyboardEvent) => {
-        const value = (<HTMLInputElement>event.target).value;
-        this.createHTTPPostObservable(value).subscribe();
-    });
-
-
-
+        tap(console.log),
+        map((event: KeyboardEvent) => (<HTMLInputElement>event.target).value),
+        exhaustMap((namePokemon: string) => this.createHTTPPostObservable(namePokemon))
+    ).subscribe();
   }
 
   createHTTPPUTObservable(name, moment) {
