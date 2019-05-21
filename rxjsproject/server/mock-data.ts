@@ -24,28 +24,12 @@ export const dataBaseMock = {
 
 
 export const mockServices = {
-    pokemons: {
+    getPokemonsByName: {
         pattern: '/api/pokemons',
         ok: dataBaseMock.pokemons,
         ko: {
             status: 200,
             json: { errorCode: 'UnexpectedException' }
-        }
-    },
-    pokemon: {
-        pattern: '/api/pokemon/:number/:pokemonname',
-        ok: {},
-        ko: {
-            status: 200,
-            json: { errorCode: 'UnexpectedException' }
-        }
-    },
-    newpokemon: {
-        pattern: '/api/pokemon/',
-        ok: { 'property': 'another value'},
-        ko: {
-            status: 200,
-            json: { test: 'ok' }
         }
     }
 };
